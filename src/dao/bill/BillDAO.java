@@ -263,6 +263,45 @@ public class BillDAO {
         return monthlyActivity;
     }
     
+    public java.util.Map<String, Integer> getCustomerActivityByWeek() {
+        java.util.Map<String, Integer> weeklyActivity = new java.util.LinkedHashMap<>();
+        String sql = "SELECT " +
+                    "DATE(transaction_time) as activity_date, " +
+                    "COUNT(DISTINCT customer_id) as active_customers " +
+                    "FROM bills " +
+                    "WHERE transaction_time >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) " +
+                    "GROUP BY DATE(transaction_time) " +
+                    "ORDER BY DATE(transaction_time)";
+        
+        // Initialize last 7 days with 0
+        java.time.LocalDate currentDate = java.time.LocalDate.now();
+        String[] dayNames = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        for (int i = 6; i >= 0; i--) {
+            java.time.LocalDate date = currentDate.minusDays(i);
+            String dayLabel = dayNames[date.getDayOfWeek().getValue() - 1];
+            weeklyActivity.put(dayLabel, 0);
+        }
+        
+        try (Connection conn = connection_provider.getCon();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                java.sql.Date activityDate = rs.getDate("activity_date");
+                int activeCustomers = rs.getInt("active_customers");
+                
+                if (activityDate != null) {
+                    java.time.LocalDate localDate = activityDate.toLocalDate();
+                    String dayLabel = dayNames[localDate.getDayOfWeek().getValue() - 1];
+                    weeklyActivity.put(dayLabel, activeCustomers);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return weeklyActivity;
+    }
+    
     public int getActiveCustomersCount() {
         String sql = "SELECT COUNT(DISTINCT customer_id) FROM bills " +
                     "WHERE MONTH(transaction_time) = MONTH(CURRENT_DATE) " +

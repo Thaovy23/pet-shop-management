@@ -1,28 +1,34 @@
--- ===== SAMPLE DATA FOR PETSHOP DATABASE =====
--- Run this after creating the main database schema
--- All data is in English as requested
-
 USE petshop_db;
 
--- ===== INSERT CUSTOMERS =====
-INSERT INTO `customers` (`name`, `email`, `phone`, `loyalty_points`) VALUES
-('John Smith', 'john.smith@email.com', '555-0101', 150),
-('Emily Johnson', 'emily.johnson@email.com', '555-0102', 200),
-('Michael Brown', 'michael.brown@email.com', '555-0103', 75),
-('Sarah Davis', 'sarah.davis@email.com', '555-0104', 300),
-('David Wilson', 'david.wilson@email.com', '555-0105', 50),
-('Lisa Anderson', 'lisa.anderson@email.com', '555-0106', 175),
-('James Miller', 'james.miller@email.com', '555-0107', 125),
-('Jessica Taylor', 'jessica.taylor@email.com', '555-0108', 250),
-('Robert Garcia', 'robert.garcia@email.com', '555-0109', 100),
-('Amanda Rodriguez', 'amanda.rodriguez@email.com', '555-0110', 325),
-('Christopher Lee', 'christopher.lee@email.com', '555-0111', 90),
-('Michelle White', 'michelle.white@email.com', '555-0112', 400),
-('Daniel Martinez', 'daniel.martinez@email.com', '555-0113', 60),
-('Ashley Thompson', 'ashley.thompson@email.com', '555-0114', 180),
-('Matthew Moore', 'matthew.moore@email.com', '555-0115', 220);
+-- Tắt Safe Update Mode
+SET SQL_SAFE_UPDATES = 0;
+SET FOREIGN_KEY_CHECKS = 0;
 
--- ===== INSERT PETS =====
+-- XÓA HẾT DỮ LIỆU
+TRUNCATE TABLE bill_items;
+TRUNCATE TABLE bills;
+TRUNCATE TABLE products;
+TRUNCATE TABLE pets;
+TRUNCATE TABLE customers;
+
+-- Bật lại
+SET FOREIGN_KEY_CHECKS = 1;
+SET SQL_SAFE_UPDATES = 1;
+
+-- ===== CUSTOMERS với số điện thoại đủ 9-10 chữ số =====
+INSERT INTO `customers` (`name`, `email`, `phone`, `loyalty_points`) VALUES
+('John Smith', 'john.smith@email.com', '555-012-3456', 150),
+('Emily Johnson', 'emily.johnson@email.com', '555-023-4567', 200),
+('Michael Brown', 'michael.brown@email.com', '555-034-5678', 75),
+('Sarah Davis', 'sarah.davis@email.com', '555-045-6789', 300),
+('David Wilson', 'david.wilson@email.com', '555-056-7890', 50),
+('Lisa Anderson', 'lisa.anderson@email.com', '555-067-8901', 175),
+('James Miller', 'james.miller@email.com', '555-078-9012', 125),
+('Jessica Taylor', 'jessica.taylor@email.com', '555-089-0123', 250),
+('Robert Garcia', 'robert.garcia@email.com', '555-090-1234', 100),
+('Amanda Rodriguez', 'amanda.rodriguez@email.com', '555-101-2345', 325);
+
+-- ===== PETS chỉ với DOG và CAT =====
 INSERT INTO `pets` (`name`, `type`, `breed`, `age`, `price`, `status`) VALUES
 -- Dogs
 ('Buddy', 'DOG', 'Golden Retriever', 2, 800.00, 1),
@@ -46,36 +52,18 @@ INSERT INTO `pets` (`name`, `type`, `breed`, `age`, `price`, `status`) VALUES
 ('Ginger', 'CAT', 'Orange Tabby', 1, 250.00, 1),
 ('Cleo', 'CAT', 'Egyptian Mau', 3, 700.00, 1),
 ('Felix', 'CAT', 'Scottish Fold', 2, 550.00, 1),
-('Nala', 'CAT', 'Ragdoll', 1, 650.00, 1),
+('Nala', 'CAT', 'Ragdoll', 1, 650.00, 1);
 
--- Birds
-('Sunny', 'BIRD', 'Canary', 1, 150.00, 1),
-('Polly', 'BIRD', 'Cockatiel', 2, 200.00, 1),
-('Rio', 'BIRD', 'Parakeet', 1, 120.00, 1),
-('Kiwi', 'BIRD', 'Lovebird', 1, 180.00, 1),
-('Mango', 'BIRD', 'Conure', 2, 300.00, 1),
-
--- Hamsters
-('Nibbles', 'HAMSTER', 'Syrian', 1, 25.00, 1),
-('Peanut', 'HAMSTER', 'Dwarf', 1, 20.00, 1),
-('Squeaky', 'HAMSTER', 'Roborovski', 1, 30.00, 1),
-('Fluffy', 'HAMSTER', 'Chinese', 1, 22.00, 1),
-('Patches', 'HAMSTER', 'Russian', 1, 28.00, 1);
-
--- ===== INSERT PRODUCTS =====
-
--- Pet Food Products
+-- ===== PRODUCTS với ngày hết hạn xa =====
 INSERT INTO `products` (`name`, `price`, `stock_quantity`, `type`, `material`, `expiration_date`, `nutritional_info`, `manufacture_date`, `dosage`, `status`) VALUES
-('Premium Dog Food - Chicken & Rice', 45.99, 50, 'FOOD', NULL, '2026-06-15', 'Protein 26%, Fat 16%, Fiber 4%, Moisture 10%', '2024-06-15', NULL, 1),
-('Kitten Formula - Salmon Flavor', 32.50, 35, 'FOOD', NULL, '2026-04-20', 'Protein 32%, Fat 20%, Fiber 3%, Moisture 12%', '2024-04-20', NULL, 1),
-('Adult Cat Food - Tuna & Vegetables', 28.75, 40, 'FOOD', NULL, '2026-08-10', 'Protein 28%, Fat 14%, Fiber 3.5%, Moisture 10%', '2024-08-10', NULL, 1),
-('Large Breed Puppy Food', 52.00, 25, 'FOOD', NULL, '2026-07-22', 'Protein 28%, Fat 18%, Fiber 4%, Moisture 10%', '2024-07-22', NULL, 1),
-('Senior Dog Food - Joint Care', 38.90, 30, 'FOOD', NULL, '2026-05-30', 'Protein 24%, Fat 12%, Fiber 4.5%, Moisture 10%', '2024-05-30', NULL, 1),
-('Bird Seed Mix - Premium Blend', 15.25, 60, 'FOOD', NULL, '2026-12-01', 'Sunflower seeds, millet, safflower, dried fruits', '2024-12-01', NULL, 1),
-('Hamster Food - Complete Nutrition', 12.99, 45, 'FOOD', NULL, '2026-09-15', 'Seeds, grains, dried vegetables, vitamins', '2024-09-15', NULL, 1),
-('Organic Dog Treats - Beef Flavor', 18.50, 75, 'FOOD', NULL, '2026-03-28', 'Organic beef, sweet potato, natural preservatives', '2024-03-28', NULL, 1),
+-- FOOD với ngày hết hạn 2027
+('Premium Dog Food - Chicken & Rice', 45.99, 50, 'FOOD', NULL, '2027-12-31', 'Protein 26%, Fat 16%, Fiber 4%, Moisture 10%', '2024-06-15', NULL, 1),
+('Kitten Formula - Salmon Flavor', 32.50, 35, 'FOOD', NULL, '2027-11-30', 'Protein 32%, Fat 20%, Fiber 3%, Moisture 12%', '2024-04-20', NULL, 1),
+('Adult Cat Food - Tuna & Vegetables', 28.75, 40, 'FOOD', NULL, '2027-10-31', 'Protein 28%, Fat 14%, Fiber 3.5%, Moisture 10%', '2024-08-10', NULL, 1),
+('Large Breed Puppy Food', 52.00, 25, 'FOOD', NULL, '2027-09-30', 'Protein 28%, Fat 18%, Fiber 4%, Moisture 10%', '2024-07-22', NULL, 1),
+('Senior Dog Food - Joint Care', 38.90, 30, 'FOOD', NULL, '2027-08-31', 'Protein 24%, Fat 12%, Fiber 4.5%, Moisture 10%', '2024-05-30', NULL, 1),
 
--- Pet Toys
+-- TOY không có ngày hết hạn
 ('Rope Toy - Cotton Braided', 8.99, 80, 'TOY', 'Cotton rope', NULL, NULL, NULL, NULL, 1),
 ('Interactive Puzzle Ball', 15.75, 45, 'TOY', 'Durable plastic', NULL, NULL, NULL, NULL, 1),
 ('Feather Wand Cat Toy', 12.50, 60, 'TOY', 'Plastic handle, natural feathers', NULL, NULL, NULL, NULL, 1),
@@ -83,25 +71,20 @@ INSERT INTO `products` (`name`, `price`, `stock_quantity`, `type`, `material`, `
 ('Catnip Mouse Set (3 pieces)', 9.99, 70, 'TOY', 'Fabric, catnip filling', NULL, NULL, NULL, NULL, 1),
 ('Dental Chew Bone - Large', 11.75, 55, 'TOY', 'Nylon', NULL, NULL, NULL, NULL, 1),
 ('Interactive Laser Pointer', 14.50, 40, 'TOY', 'Plastic, LED laser', NULL, NULL, NULL, NULL, 1),
-('Hamster Exercise Wheel', 22.00, 25, 'TOY', 'Metal frame, plastic wheel', NULL, NULL, NULL, NULL, 1),
-('Bird Swing Perch', 16.75, 35, 'TOY', 'Natural wood, cotton rope', NULL, NULL, NULL, NULL, 1),
+('Tennis Ball Set (3 pieces)', 12.99, 85, 'TOY', 'Rubber, felt', NULL, NULL, NULL, NULL, 1),
+('Cat Scratching Post', 35.50, 20, 'TOY', 'Sisal rope, wood', NULL, NULL, NULL, NULL, 1),
 ('Plush Elephant Toy', 13.25, 50, 'TOY', 'Soft plush fabric', NULL, NULL, NULL, NULL, 1),
 
--- Pet Medicine
-('Flea & Tick Prevention - Dogs', 65.00, 20, 'MEDICINE', NULL, '2027-01-15', 'Active ingredient: Fipronil 9.8%', '2024-01-15', 'Apply monthly', 1),
-('Ear Cleaning Solution', 18.99, 35, 'MEDICINE', NULL, '2026-11-20', 'Gentle formula for pets', '2023-11-20', 'Use as needed', 1),
-('Joint Support Tablets', 42.50, 30, 'MEDICINE', NULL, '2026-10-05', 'Glucosamine, Chondroitin, MSM', '2023-10-05', '1 tablet per 25 lbs body weight', 1),
-('Probiotic Supplement', 28.75, 40, 'MEDICINE', NULL, '2026-08-18', 'Live beneficial bacteria cultures', '2023-08-18', '1 capsule daily', 1),
-('Wound Care Spray', 15.50, 45, 'MEDICINE', NULL, '2026-12-30', 'Antiseptic formula', '2023-12-30', 'Spray 2-3 times daily', 1),
-('Digestive Aid Powder', 24.99, 25, 'MEDICINE', NULL, '2026-06-25', 'Digestive enzymes and prebiotics', '2023-06-25', '1 tsp per meal', 1),
-('Calming Tablets for Anxiety', 35.00, 30, 'MEDICINE', NULL, '2026-09-10', 'Natural calming ingredients', '2023-09-10', '1 tablet twice daily', 1),
-('Vitamin Supplements - Multi', 19.99, 50, 'MEDICINE', NULL, '2026-07-12', 'Essential vitamins and minerals', '2023-07-12', '1 tablet daily', 1),
-('Eye Drops - Gentle Formula', 12.75, 60, 'MEDICINE', NULL, '2026-04-08', 'Sterile eye solution', '2023-04-08', '1-2 drops as needed', 1),
-('Deworming Tablets', 22.50, 35, 'MEDICINE', NULL, '2026-05-14', 'Broad spectrum dewormer', '2023-05-14', 'Follow vet instructions', 1);
+-- MEDICINE với ngày hết hạn 2028
+('Flea & Tick Prevention - Dogs', 65.00, 20, 'MEDICINE', NULL, '2028-01-31', 'Active ingredient: Fipronil 9.8%', '2024-01-15', 'Apply monthly', 1),
+('Ear Cleaning Solution', 18.99, 35, 'MEDICINE', NULL, '2028-02-28', 'Gentle formula for pets', '2023-11-20', 'Use as needed', 1),
+('Joint Support Tablets', 42.50, 30, 'MEDICINE', NULL, '2028-03-31', 'Glucosamine, Chondroitin, MSM', '2023-10-05', '1 tablet per 25 lbs body weight', 1),
+('Probiotic Supplement', 28.75, 40, 'MEDICINE', NULL, '2028-04-30', 'Live beneficial bacteria cultures', '2023-08-18', '1 capsule daily', 1),
+('Vitamin Supplements - Multi', 19.99, 50, 'MEDICINE', NULL, '2028-05-31', 'Essential vitamins and minerals', '2023-07-12', '1 tablet daily', 1);
 
--- Display success message
-SELECT 'Sample data inserted successfully!' as Message;
+-- Kiểm tra kết quả
+SELECT 'All data fixed and inserted successfully!' as Message;
 SELECT 
-    (SELECT COUNT(*) FROM customers) as 'Customers Added',
-    (SELECT COUNT(*) FROM pets) as 'Pets Added', 
-    (SELECT COUNT(*) FROM products) as 'Products Added'; 
+    (SELECT COUNT(*) FROM customers) as Customers,
+    (SELECT COUNT(*) FROM pets) as Pets, 
+    (SELECT COUNT(*) FROM products) as Products;

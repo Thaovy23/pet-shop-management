@@ -194,7 +194,7 @@ public class LoginFrame extends JFrame {
         
         // Sign up button
         JButton signUpButton = createModernButton("Create New Account", ACCENT_COLOR, Color.WHITE);
-        System.out.println("✅ Sign Up button created - Text: '" + signUpButton.getText() + "', Background: " + signUpButton.getBackground());
+        System.out.println(" Sign Up button created - Text: '" + signUpButton.getText() + "', Background: " + signUpButton.getBackground());
         signUpButton.addActionListener(e -> {
             System.out.println("Sign Up button clicked - Opening SignupFrame...");
             try {
@@ -355,7 +355,7 @@ public class LoginFrame extends JFrame {
         footerPanel.setOpaque(false);
         footerPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         
-        JLabel footerLabel = new JLabel("© 2024 Pet Shop Management System");
+        JLabel footerLabel = new JLabel("© 2025 Pet Shop Management System");
         footerLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         footerLabel.setForeground(TEXT_SECONDARY);
         footerLabel.setHorizontalAlignment(SwingConstants.CENTER);

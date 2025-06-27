@@ -182,8 +182,8 @@ public class ReportsPanel extends JPanel {
         metricsPanel.add(createSummaryCard("Estimated Costs", "$" + estimatedCosts, dangerColor));
         metricsPanel.add(createSummaryCard("Estimated Profit", "$" + estimatedProfit, infoColor));
         metricsPanel.add(createSummaryCard("Profit Margin", profitMargin, warningColor));
-        metricsPanel.add(createSummaryCardWithTooltip("Growth Rate", "Coming Soon", successColor, "Will be available after 3+ months of data"));
-        metricsPanel.add(createSummaryCardWithTooltip("ROI", "Coming Soon", primaryColor, "Will be added when cost tracking system is implemented"));
+        metricsPanel.add(createSummaryCardWithTooltip("Growth Rate", "Pending Analysis", successColor, "Requires minimum 3 months historical data for accurate trend calculation"));
+        metricsPanel.add(createSummaryCardWithTooltip("ROI", "Under Development", primaryColor, "Comprehensive cost tracking module implementation in progress"));
 
         // Revenue trend chart
         JPanel chartPanel = createRevenueFlowChart();
@@ -649,25 +649,24 @@ public class ReportsPanel extends JPanel {
         
         // Get actual customer activity data from database
         try {
-            java.util.Map<String, Integer> monthlyActivity = billingController.getCustomerActivityByMonth();
+            java.util.Map<String, Integer> weeklyActivity = billingController.getCustomerActivityByWeek();
             
-            for (java.util.Map.Entry<String, Integer> entry : monthlyActivity.entrySet()) {
-                String month = entry.getKey();
+            for (java.util.Map.Entry<String, Integer> entry : weeklyActivity.entrySet()) {
+                String day = entry.getKey();
                 Integer activeCustomers = entry.getValue();
-                dataset.addValue(activeCustomers, "Active Customers", month);
+                dataset.addValue(activeCustomers, "Active Customers", day);
             }
             
         } catch (Exception e) {
             // Fallback to empty data if database error
-            String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-                              "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-            for (String month : months) {
-                dataset.addValue(0, "Active Customers", month);
+            String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+            for (String day : days) {
+                dataset.addValue(0, "Active Customers", day);
             }
         }
 
         JFreeChart chart = ChartFactory.createLineChart(
-            "Customer Activity Growth", "Month", "Active Customers", 
+            "Customer Activity (Last 1 Week)", "Day", "Active Customers", 
             dataset, PlotOrientation.VERTICAL, false, true, false);
         
         chart.setBackgroundPaint(Color.WHITE);
@@ -676,7 +675,7 @@ public class ReportsPanel extends JPanel {
         plot.getRenderer().setSeriesPaint(0, successColor);
 
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setBorder(BorderFactory.createTitledBorder("Customer Growth"));
+        chartPanel.setBorder(BorderFactory.createTitledBorder("Customer Activity (Last 1 Week)"));
         return chartPanel;
     }
 

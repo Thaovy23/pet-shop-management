@@ -183,6 +183,10 @@ public class BillingController {
         return billDao.getCustomerActivityByMonth();
     }
     
+    public java.util.Map<String, Integer> getCustomerActivityByWeek() {
+        return billDao.getCustomerActivityByWeek();
+    }
+    
     public int getActiveCustomersCount() {
         return billDao.getActiveCustomersCount();
     }

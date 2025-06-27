@@ -336,30 +336,30 @@ public class HomePanel extends JPanel {
     }
 
     private JPanel createCustomerGrowthChart() {
-        // Create line chart for customer activity over last 6 months
+        // Create line chart for customer activity over last 1 week
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
         // Get actual customer activity data for dashboard overview
         try {
             BillingController billing = new BillingController();
-            java.util.Map<String, Integer> monthlyActivity = billing.getCustomerActivityByMonth();
+            java.util.Map<String, Integer> weeklyActivity = billing.getCustomerActivityByWeek();
             
-            // Show last 6 months for dashboard overview
-            String[] last6Months = {"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-            for (String month : last6Months) {
-                Integer customers = monthlyActivity.getOrDefault(month, 0);
-                dataset.addValue(customers, "Active Customers", month);
+            // Show last 7 days for dashboard overview
+            for (java.util.Map.Entry<String, Integer> entry : weeklyActivity.entrySet()) {
+                String day = entry.getKey();
+                Integer customers = entry.getValue();
+                dataset.addValue(customers, "Active Customers", day);
             }
         } catch (Exception e) {
             // Fallback data if error
-            String[] months = {"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-            for (String month : months) {
-                dataset.addValue(0, "Active Customers", month);
+            String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+            for (String day : days) {
+                dataset.addValue(0, "Active Customers", day);
             }
         }
 
         JFreeChart chart = ChartFactory.createLineChart(
-            "Customer Activity (Last 6 Months)", "Month", "Active Customers", 
+            "Customer Activity (Last 1 Week)", "Day", "Active Customers", 
             dataset, PlotOrientation.VERTICAL, false, true, false);
         
         // Customize chart
