@@ -242,12 +242,18 @@ public class PetPanel extends JPanel {
         String name = model.getValueAt(row, 1).toString();
         String type = model.getValueAt(row, 2).toString();
         String breed = model.getValueAt(row, 3).toString();
-        int age = Integer.parseInt(model.getValueAt(row, 4).toString());
-        BigDecimal price = new BigDecimal(model.getValueAt(row, 5).toString());
+        
+        // Fix age parsing - remove " years" suffix
+        String ageString = model.getValueAt(row, 4).toString();
+        int age = Integer.parseInt(ageString.replace(" years", ""));
+        
+        // Fix price parsing - remove "$" prefix
+        String priceString = model.getValueAt(row, 5).toString();
+        BigDecimal price = new BigDecimal(priceString.replace("$", ""));
 
         Pet pet = switch (type) {
-            case "DOG" -> new Dog(name, breed, age, price);
-            case "CAT" -> new Cat(name, breed, age, price);
+            case "Dog" -> new Dog(name, breed, age, price);
+            case "Cat" -> new Cat(name, breed, age, price);
             default -> throw new IllegalArgumentException("Invalid pet type");
         };
         pet.setId(id);

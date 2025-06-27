@@ -4,6 +4,7 @@ import view.panel.BillingPanel;
 
 import util.ui.ButtonCellRenderer;
 import util.ui.ButtonCellEditor;
+import util.ui.ButtonStyler;
 
 import model.product.Product;
 import model.pet.Pet;
@@ -79,7 +80,7 @@ public class AddItemDialog extends JDialog {
 
         JButton loadBtn = new JButton("Load Items");
             
-        styleButton(loadBtn);
+        ButtonStyler.styleSaveButton(loadBtn);
 
         filterPanel.add(new JLabel("Label:"));
         
@@ -248,16 +249,7 @@ public class AddItemDialog extends JDialog {
         }
     }
 
-    private void styleButton(JButton btn) 
-    {
-        btn.setBackground(new Color(0x007BFF));
-        
-        btn.setForeground(Color.WHITE);
-        
-        btn.setFocusPainted(false);
-        
-        btn.setFont(new Font("SansSerif", Font.BOLD, 13));
-    }
+
 
     private void styleCombo(JComboBox<String> combo) 
     {

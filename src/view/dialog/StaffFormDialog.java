@@ -5,6 +5,7 @@ import controller.user.AuthController;
 import controller.user.UserController;
 import model.user.Manager;
 import model.user.Staff;
+import util.ui.ButtonStyler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,6 +68,9 @@ public class StaffFormDialog extends JDialog {
 
         JButton saveBtn = new JButton(staff == null ? "Create" : "Update");
         JButton cancelBtn = new JButton("Cancel");
+
+        ButtonStyler.styleSaveButton(saveBtn);
+        ButtonStyler.styleCancelButton(cancelBtn);
 
         JPanel btnPanel = new JPanel();
         btnPanel.add(saveBtn);
