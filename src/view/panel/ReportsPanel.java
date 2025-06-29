@@ -855,6 +855,7 @@ private void exportCurrentData() {
     }
 }
 
+
     private void refreshAllReports() {
         // Refresh all report data
         SwingUtilities.invokeLater(() -> {
