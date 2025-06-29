@@ -10,6 +10,7 @@ import model.product.Product;
 import controller.product.ProductController;
 
 import service.product.ProductService;
+import util.ui.ButtonStyler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,6 +59,9 @@ public class ProductFormDialog extends JDialog {
         // Nút Save và Cancel
         JButton saveBtn = new JButton("Save");
         JButton cancelBtn = new JButton("Cancel");
+
+        ButtonStyler.styleSaveButton(saveBtn);
+        ButtonStyler.styleCancelButton(cancelBtn);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.add(saveBtn);

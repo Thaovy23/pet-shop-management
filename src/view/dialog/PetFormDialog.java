@@ -6,6 +6,7 @@ import controller.pet.PetController;
 import model.pet.Pet;
 
 import service.pet.PetService;
+import util.ui.ButtonStyler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,14 +49,21 @@ public class PetFormDialog extends JDialog {
         JButton saveBtn = new JButton("Save");
         JButton cancelBtn = new JButton("Cancel");
 
-        styleButton(saveBtn);
-        styleCancelButton(cancelBtn);
+        ButtonStyler.styleSaveButton(saveBtn);
+        ButtonStyler.styleCancelButton(cancelBtn);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.add(cancelBtn);
         buttonPanel.add(saveBtn);
         add(new JLabel());  // spacer cho bên trái
         add(buttonPanel);   // gắn panel chứa 2 nút
+        
+        // Force repaint after styling
+        SwingUtilities.invokeLater(() -> {
+            saveBtn.repaint();
+            cancelBtn.repaint();
+            buttonPanel.repaint();
+        });
 
 
         // Enter = Submit
@@ -125,20 +133,5 @@ public class PetFormDialog extends JDialog {
         setVisible(true);
     }
 
-    private void styleButton(JButton btn) {
-        btn.setBackground(new Color(0x007BFF));
-        btn.setForeground(Color.WHITE);
-        btn.setFocusPainted(false);
-        btn.setFont(new Font("SansSerif", Font.BOLD, 13));
-        btn.setOpaque(true);
-        btn.setContentAreaFilled(false); // Hoặc false nếu bạn tự vẽ nền
-    }
 
-
-    private void styleCancelButton(JButton btn) {
-        btn.setBackground(Color.LIGHT_GRAY);
-        btn.setForeground(Color.BLACK);
-        btn.setFocusPainted(false);
-        btn.setFont(new Font("SansSerif", Font.PLAIN, 13));
-    }
 }

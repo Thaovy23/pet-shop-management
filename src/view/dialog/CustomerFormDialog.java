@@ -4,6 +4,7 @@ import view.panel.CustomerPanel;
 import controller.customer.CustomerController;
 import model.user.Customer;
 import service.human.CustomerService;
+import util.ui.ButtonStyler;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -111,9 +112,8 @@ public class CustomerFormDialog extends JDialog {
         JButton saveBtn = new JButton(existingCustomer == null ? "Add" : "Update");
         JButton cancelBtn = new JButton("Cancel");
         
-        saveBtn.setBackground(new Color(0, 123, 255));
-        saveBtn.setForeground(Color.WHITE);
-        saveBtn.setFocusPainted(false);
+        ButtonStyler.styleSaveButton(saveBtn);
+        ButtonStyler.styleCancelButton(cancelBtn);
         
         btnPanel.add(saveBtn);
         btnPanel.add(cancelBtn);
