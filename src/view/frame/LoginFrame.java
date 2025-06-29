@@ -379,12 +379,12 @@ public class LoginFrame extends JFrame {
                 // Add a subtle success animation
                 showSuccessMessage("Login successful!");
                 dispose();
-                new HomeFrame(AuthController.isManager());
+                HomeFrame homeFrame = new HomeFrame(AuthController.isManager());
             } else {
                 showErrorMessage("Invalid email or password");
             }
         } catch (Exception e) {
-            showErrorMessage("An error occurred during login");
+            showErrorMessage("An error occurred during login" + e.getMessage());
         }
     }
     

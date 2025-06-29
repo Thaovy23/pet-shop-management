@@ -237,29 +237,28 @@ public class PetPanel extends JPanel {
         });
     }
 
-private Pet mapRowToPet(DefaultTableModel model, int row) {
-    int id = Integer.parseInt(model.getValueAt(row, 0).toString());
-    String name = model.getValueAt(row, 1).toString();
-    String type = model.getValueAt(row, 2).toString();
-    String breed = model.getValueAt(row, 3).toString();
+    private Pet mapRowToPet(DefaultTableModel model, int row) {
+        int id = Integer.parseInt(model.getValueAt(row, 0).toString());
+        String name = model.getValueAt(row, 1).toString();
+        String type = model.getValueAt(row, 2).toString();
+        String breed = model.getValueAt(row, 3).toString();
 
-    // Fix: Remove " years" before parsing
-    String ageStr = model.getValueAt(row, 4).toString().replace(" years", "").trim();
-    int age = Integer.parseInt(ageStr);
+        // Fix: Remove " years" before parsing
+        String ageStr = model.getValueAt(row, 4).toString().replace(" years", "").trim();
+        int age = Integer.parseInt(ageStr);
 
-    // Fix: Remove "$" before parsing
-    String priceStr = model.getValueAt(row, 5).toString().replace("$", "").trim();
-    BigDecimal price = new BigDecimal(priceStr);
+        // Fix: Remove "$" before parsing
+        String priceStr = model.getValueAt(row, 5).toString().replace("$", "").trim();
+        BigDecimal price = new BigDecimal(priceStr);
 
-    Pet pet = switch (type.toUpperCase()) {
-        case "DOG" -> new Dog(name, breed, age, price);
-        case "CAT" -> new Cat(name, breed, age, price);
-        default -> throw new IllegalArgumentException("Invalid pet type: " + type);
-    };
-    pet.setId(id);
-    return pet;
-}
-
+        Pet pet = switch (type.toUpperCase()) {
+            case "DOG" -> new Dog(name, breed, age, price);
+            case "CAT" -> new Cat(name, breed, age, price);
+            default -> throw new IllegalArgumentException("Invalid pet type: " + type);
+        };
+        pet.setId(id);
+        return pet;
+    }
 
     private JButton createRoundedButton(String text) {
         JButton button = new JButton(text);

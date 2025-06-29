@@ -744,39 +744,116 @@ public class ReportsPanel extends JPanel {
         return btn;
     }
 
-    private void exportCurrentData() {
-        int selectedTab = tabbedPane.getSelectedIndex();
-        String tabName = tabbedPane.getTitleAt(selectedTab);
+private void exportCurrentData() {
+    int selectedTab = tabbedPane.getSelectedIndex();
+    String tabName = tabbedPane.getTitleAt(selectedTab);
+    
+    try {
+        String fileName = "report_" + System.currentTimeMillis() + ".csv";
+        FileWriter writer = new FileWriter(fileName);
         
-        try {
-            String fileName = "report_" + System.currentTimeMillis() + ".csv";
-            FileWriter writer = new FileWriter(fileName);
+        writer.write("Pet Shop Report - " + tabName + "\n");
+        writer.write("Generated: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n\n");
+        
+        switch (selectedTab) {
+            case 0: // Sales Report
+                writer.write("Metric,Value\n");
+                writer.write("Total Orders," + billingController.getTotalOrders() + "\n");
+                writer.write("Total Revenue,$" + billingController.getTotalRevenue() + "\n");
+                writer.write("Average Order Value,$" + 
+                    (billingController.getTotalOrders() > 0 && billingController.getTotalRevenue() != null ? 
+                        billingController.getTotalRevenue().divide(BigDecimal.valueOf(billingController.getTotalOrders()), 2, BigDecimal.ROUND_HALF_UP) : BigDecimal.ZERO) 
+                + "\n");
+                writer.write("Best Month," + billingController.getBestMonth() + "\n");
+                break;
             
-            writer.write("Pet Shop Report - " + tabName + "\n");
-            writer.write("Generated: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n\n");
-            
-            // Add sample data based on tab
-            switch (selectedTab) {
-                case 0: // Sales Report
-                    writer.write("Metric,Value\n");
-                    writer.write("Total Orders," + billingController.getTotalOrders() + "\n");
-                    writer.write("Total Revenue,$" + billingController.getTotalRevenue() + "\n");
-                    break;
-                case 1: // Financial Report
-                    writer.write("Financial Metric,Amount\n");
-                    writer.write("Total Revenue,$" + billingController.getTotalRevenue() + "\n");
-                    break;
-                default:
-                    writer.write("Data exported for " + tabName + "\n");
-            }
-            
-            writer.close();
-            JOptionPane.showMessageDialog(this, "Data exported to " + fileName, "Export Complete", JOptionPane.INFORMATION_MESSAGE);
-            
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error exporting data: " + e.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+            case 1: // Financial Report
+                BigDecimal totalRevenue = billingController.getTotalRevenue();
+                if (totalRevenue == null) totalRevenue = BigDecimal.ZERO;
+                BigDecimal estimatedCosts = totalRevenue.multiply(BigDecimal.valueOf(0.6));
+                BigDecimal estimatedProfit = totalRevenue.subtract(estimatedCosts);
+                String profitMargin = totalRevenue.compareTo(BigDecimal.ZERO) > 0 ? 
+                    String.format("%.1f%%", estimatedProfit.divide(totalRevenue, 4, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)).doubleValue()) : "0%";
+
+                writer.write("Financial Metric,Amount\n");
+                writer.write("Total Revenue,$" + totalRevenue + "\n");
+                writer.write("Estimated Costs,$" + estimatedCosts + "\n");
+                writer.write("Estimated Profit,$" + estimatedProfit + "\n");
+                writer.write("Profit Margin," + profitMargin + "\n");
+                writer.write("Growth Rate,Pending Analysis\n");
+                writer.write("ROI,Under Development\n");
+                break;
+
+            case 2: // Pet Statistics
+                int totalPets = petController.getAllPets().size();
+                int soldPets = billingController.getSoldPetsCount();
+                int availablePets = totalPets; // As per your code
+
+                writer.write("Pet Statistic,Count\n");
+                writer.write("Available Pets," + availablePets + "\n");
+                writer.write("Sold Pets," + soldPets + "\n");
+                writer.write("Total Processed," + (availablePets + soldPets) + "\n");
+                break;
+
+            case 3: // Inventory Report
+                int totalProducts = productController.getAllProducts().size();
+                int lowStockItems = 0;
+                int outOfStockItems = 0;
+
+                try {
+                    lowStockItems = dao.product.ProductDAO.getLowStockCount(5);
+                    outOfStockItems = dao.product.ProductDAO.getLowStockCount(0);
+                    lowStockItems = lowStockItems - outOfStockItems;
+                } catch (Exception e) {
+                    // ignore errors
+                }
+
+                writer.write("Inventory Metric,Count\n");
+                writer.write("Total Products," + totalProducts + "\n");
+                writer.write("Low Stock," + lowStockItems + "\n");
+                writer.write("Out of Stock," + outOfStockItems + "\n");
+                writer.write("Well Stocked," + (totalProducts - lowStockItems - outOfStockItems) + "\n");
+                break;
+
+            case 4: // Customer Report
+                int totalCustomers = CustomerController.getAllCustomers().size();
+                int activeCustomers = billingController.getActiveCustomersCount();
+                int newCustomers = billingController.getNewCustomersThisMonth();
+
+                writer.write("Customer Metric,Count\n");
+                writer.write("Total Customers," + totalCustomers + "\n");
+                writer.write("Active Customers," + activeCustomers + "\n");
+                writer.write("New This Month," + newCustomers + "\n");
+                break;
+
+            case 5: // Staff Report
+                int totalStaff = 0;
+                int totalOrders = billingController.getTotalOrders();
+                BigDecimal totalStaffRevenue = billingController.getTotalStaffRevenue();
+
+                try {
+                    totalStaff = userDAO.getAllStaff().size();
+                } catch (Exception e) {
+                    totalStaff = 0;
+                }
+
+                writer.write("Staff Metric,Value\n");
+                writer.write("Total Staff," + totalStaff + "\n");
+                writer.write("Total Orders," + totalOrders + "\n");
+                writer.write("Total Revenue," + (totalStaffRevenue != null ? "$" + totalStaffRevenue : "$0.00") + "\n");
+                break;
+
+            default:
+                writer.write("Data exported for " + tabName + "\n");
         }
+        
+        writer.close();
+        JOptionPane.showMessageDialog(this, "Data exported to " + fileName, "Export Complete", JOptionPane.INFORMATION_MESSAGE);
+        
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error exporting data: " + e.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
     }
+}
 
     private void refreshAllReports() {
         // Refresh all report data
